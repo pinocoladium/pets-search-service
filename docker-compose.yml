@@ -1,0 +1,48 @@
+
+services:
+  fastapi:
+    image: pets-search-service
+    container_name: pets-search-service
+    build: .
+    restart: "no"
+    command: python main.py
+    env_file: .environment
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+
+  celery:
+    image: pets-search-service
+    container_name: pets-search-service-celery
+    command: celery -A app.celery.worker worker -l INFO
+    env_file:
+      - .environment
+    volumes:
+      - .:/code
+
+  celery_beat:
+    image: pets-search-service
+    container_name: pets-search-service-celery-beat
+    command: celery -A app.celery.worker beat -l INFO
+    env_file:
+      - .environment
+    volumes:
+      - .:/code
+
+  redis:
+    image: redis:alpine
+    container_name: pets-search-service-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./storage/redis:/data
+
+  postgres:
+    image: postgis/postgis:14-3.4
+    container_name: pets-search-service-postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./storage/postgres:/var/lib/postgresql/data
+    env_file: .environment

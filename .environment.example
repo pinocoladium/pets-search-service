@@ -1,0 +1,18 @@
+# Application
+DEBUG=False
+PORT=8000
+WORKERS=2
+BEARER_TOKEN='example_token'
+
+# Postgres
+POSTGRES_PORT=5432
+POSTGRES_PASSWORD=postgres_password
+POSTGRES_USER=postgres
+POSTGRES_DB=pets_search_service
+POSTGRES_HOST=pets-search-service-postgres
+
+# Celery
+CELERY_BROKER_URL = celery://celery
+
+# Redis
+REDIS_URL = redis://redis
