@@ -2,8 +2,8 @@ from shapely import Point
 from sqlalchemy import Boolean, ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
+from app.db.models import BaseModel
 from utils.geoalchemy import PointField
-from utils.models.base import BaseModel
 from utils.models.mixins import MetadataColumnsMixin
 
 
@@ -55,7 +55,7 @@ class UserPasswordTable(MetadataColumnsMixin, BaseModel):
     __tablename__ = 'users_passwords'
 
     user_id: Mapped[int] = mapped_column(
-        ForeignKey('user.id'),
+        ForeignKey('users.id'),
         nullable=False,
     )
 
@@ -69,7 +69,7 @@ class UserLocationTable(BaseModel):
     __tablename__ = 'users_locations'
 
     user_id: Mapped[int] = mapped_column(
-        ForeignKey('user.id'),
+        ForeignKey('users.id'),
         nullable=False,
     )
 
@@ -80,7 +80,7 @@ class UserLocationTable(BaseModel):
 
     location: Mapped[Point] = mapped_column(
         PointField,
-        nullable=True,
+        nullable=False,
     )
 
     __table_args__ = (

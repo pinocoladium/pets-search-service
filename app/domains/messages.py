@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-from app.domains import User
+
+if TYPE_CHECKING:
+    from app.domains import User
 
 
 @dataclass

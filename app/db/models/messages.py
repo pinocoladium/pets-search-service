@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import Boolean, DateTime, ForeignKey, func, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from utils.models.base import BaseModel
+from app.db.models import BaseModel
 
 
 class MessageTable(BaseModel):
@@ -16,12 +16,12 @@ class MessageTable(BaseModel):
     )
 
     recipient_id: Mapped[int] = mapped_column(
-        ForeignKey('user.id'),
+        ForeignKey('users.id'),
         nullable=False,
     )
 
     sender_id: Mapped[int] = mapped_column(
-        ForeignKey('user.id'),
+        ForeignKey('users.id'),
         nullable=False,
     )
 

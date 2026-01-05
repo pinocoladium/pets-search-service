@@ -1,7 +1,25 @@
 from sqlalchemy.orm import registry, relationship
 
-from app.db.models import MessageTable, NotificationTable, UserLocationTable, UserPasswordTable, UserTable
-from app.domains import Message, Notification, User, UserLocation, UserPassword
+from app.db.models import (
+    MessageTable,
+    NotificationTable,
+    PetAdoptionNoticeTable,
+    PetFoundNoticeTable,
+    PetMissingNoticeTable,
+    UserLocationTable,
+    UserPasswordTable,
+    UserTable,
+)
+from app.domains import (
+    Message,
+    Notification,
+    PetAdoptionNotice,
+    PetFoundNotice,
+    PetMissingNotice,
+    User,
+    UserLocation,
+    UserPassword,
+)
 
 
 def start_mapping_table_from_domain():
@@ -44,6 +62,24 @@ def start_mapping_table_from_domain():
                 Message,
                 foreign_keys=[MessageTable.recipient_id],
                 back_populates='recipient',
+                viewonly=True,
+            ),
+            'pet_adoption_notices': relationship(
+                PetAdoptionNotice,
+                foreign_keys=[PetAdoptionNoticeTable.owner_id],
+                back_populates='owner',
+                viewonly=True,
+            ),
+            'pet_missing_notices': relationship(
+                PetMissingNotice,
+                foreign_keys=[PetMissingNoticeTable.owner_id],
+                back_populates='owner',
+                viewonly=True,
+            ),
+            'pet_found_notices': relationship(
+                PetFoundNotice,
+                foreign_keys=[PetFoundNoticeTable.finder_id],
+                back_populates='finder',
                 viewonly=True,
             ),
         },
@@ -99,6 +135,42 @@ def start_mapping_table_from_domain():
                 User,
                 foreign_keys=[MessageTable.recipient_id],
                 back_populates='received_messages',
+                viewonly=True,
+            ),
+        },
+    )
+
+    registrator.map_imperatively(
+        PetAdoptionNotice,
+        PetAdoptionNoticeTable.__table__,
+        properties={
+            'owner': relationship(
+                User,
+                back_populates='pet_adoption_notices',
+                viewonly=True,
+            ),
+        },
+    )
+
+    registrator.map_imperatively(
+        PetMissingNotice,
+        PetMissingNoticeTable.__table__,
+        properties={
+            'owner': relationship(
+                User,
+                back_populates='pet_missing_notices',
+                viewonly=True,
+            ),
+        },
+    )
+
+    registrator.map_imperatively(
+        PetFoundNotice,
+        PetFoundNoticeTable.__table__,
+        properties={
+            'finder': relationship(
+                User,
+                back_populates='pet_found_notices',
                 viewonly=True,
             ),
         },

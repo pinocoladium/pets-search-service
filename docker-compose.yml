@@ -46,3 +46,14 @@ services:
     volumes:
       - ./storage/postgres:/var/lib/postgresql/data
     env_file: .environment
+
+  minio:
+    image: minio/minio
+    container_name: pets-search-service-minio
+    command: server --console-address ":9001" /data/
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file: .environment
+    volumes:
+      - ./storage/minio:/data

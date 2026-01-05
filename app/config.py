@@ -1,6 +1,7 @@
 import logging
 import sys
 
+from minio import Minio
 from pydantic import AnyUrl, ConfigDict
 from pydantic.networks import IPvAnyAddress
 from pydantic_settings import BaseSettings
@@ -16,7 +17,6 @@ class Settings(BaseSettings):
     # Application
     PORT: int = 8000
     HOST: IPvAnyAddress | AnyUrl = '0.0.0.0'
-    BEARER_TOKEN: str
     WORKERS: int = 4
 
     # Database
@@ -31,6 +31,11 @@ class Settings(BaseSettings):
 
     # Redis
     REDIS_URL: str
+
+    # Minio
+    MINIO_ROOT_USER: str
+    MINIO_ROOT_PASSWORD: str
+    MINIO_ENDPOINT: str
 
     WEATHER_FORECAST_HOURS_STEP: int = 3
     # Be carefully with this setting, cus open weather may do not support this
@@ -48,3 +53,11 @@ settings = Settings(_env_file='.environment')
 logger = logging.getLogger()
 logger.addHandler(logging.StreamHandler(sys.stdout))
 logger.setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
+
+
+minio_client = Minio(
+    settings.MINIO_ENDPOINT,
+    access_key=settings.MINIO_ROOT_USER,
+    secret_key=settings.MINIO_ROOT_PASSWORD,
+    secure=False,
+)
